@@ -10,6 +10,9 @@ A modern, responsive Pomodoro timer web application to help you stay focused and
 - 💾 Settings persistence using localStorage
 - 📱 Responsive design for all devices
 - 🎨 Beautiful gradient UI with smooth animations
+- 🚀 **Progressive Web App (PWA)** - Install as a native app
+- 📴 **Offline support** - Works without internet connection
+- 🔕 **Toggle controls** - Enable/disable sound and notifications
 
 ## Quick Start (Windows)
 
@@ -44,6 +47,29 @@ A modern, responsive Pomodoro timer web application to help you stay focused and
    ```
 4. Open `http://localhost:8081` in your browser
 
+## PWA Installation (Recommended)
+
+### Installing as a Desktop App
+
+**Chrome/Edge (Windows/Mac/Linux):**
+1. Open the app in Chrome/Edge browser
+2. Click the install icon (📱) in the address bar
+3. Click "Install" to add to your applications
+4. The app will open in its own window, like a native app
+
+**Chromebook:**
+1. Open the app in Chrome browser
+2. Click the install icon (📱) in the address bar
+3. Click "Install" to add to your Chromebook
+4. Find it in your app launcher
+
+### Benefits of PWA Installation
+- **Offline Access**: Works without internet after first visit
+- **Native Feel**: Runs in its own window, not a browser tab
+- **Auto-launches**: Can be set to start with your system
+- **Better Performance**: Faster loading and smoother operation
+- **System Integration**: Appears in app switcher and taskbar
+
 ## How to Use
 
 1. **Set Your Durations**: Adjust work, break, and long break durations in the settings
@@ -58,6 +84,8 @@ A modern, responsive Pomodoro timer web application to help you stay focused and
 - **Break Duration**: Short break between work sessions (default: 5 minutes)
 - **Long Break Duration**: Extended break after several sessions (default: 15 minutes)
 - **Sessions until Long Break**: Number of work sessions before a long break (default: 4)
+- **Sound Notifications**: Enable/disable sound alerts (default: enabled)
+- **Browser Notifications**: Enable/disable system notifications (default: disabled)
 
 ## Features Explained
 
@@ -72,6 +100,13 @@ A modern, responsive Pomodoro timer web application to help you stay focused and
 - Sound alerts using Web Audio API
 - Works even when tab is in background
 - Permission requested on first use
+- Toggle controls for sound and browser notifications
+
+### Offline Support
+- **First Visit**: App caches all necessary files for offline use
+- **No Internet Required**: Timer works completely offline after initial load
+- **Cached Resources**: HTML, CSS, JavaScript, and icons are stored locally
+- **Automatic Updates**: App checks for updates when online
 
 ### Responsive Design
 - Works on desktop, tablet, and mobile
@@ -142,11 +177,22 @@ To modify or extend the app:
 
 ```
 pomodoro-app/
-├── index.html          # Main HTML structure
-├── styles.css          # Styling and responsive design
-├── script.js           # Timer logic and interactions
-├── package.json        # Dependencies and scripts
-└── README.md          # This file
+├── index.html              # Main HTML structure
+├── manifest.webmanifest    # PWA manifest file
+├── service-worker.js       # Offline caching service worker
+├── styles.css              # Styling and responsive design
+├── src/                    # JavaScript modules
+│   ├── app.js             # Main application logic
+│   ├── controllers/       # UI controllers
+│   ├── models/           # Data models
+│   ├── services/         # Settings and stats services
+│   └── utils/            # Utility functions
+├── icons/                  # PWA app icons
+│   ├── icon-192.png      # 192x192 icon
+│   ├── icon-512.png      # 512x512 icon
+│   └── README.md         # Icon instructions
+├── package.json            # Dependencies and scripts
+└── README.md              # This file
 ```
 
 ## License

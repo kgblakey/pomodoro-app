@@ -6,6 +6,8 @@
     <title>Pomodoro Timer</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#111111">
 </head>
 <body>
     <div class="container">
@@ -45,6 +47,20 @@
                     <label for="sessionsUntilLongBreak">Sessions until Long Break</label>
                     <input type="number" id="sessionsUntilLongBreak" value="4" min="2" max="10">
                 </div>
+                
+                <div class="setting-group">
+                    <label for="soundEnabled">
+                        <input type="checkbox" id="soundEnabled" checked>
+                        Enable Sound Notifications
+                    </label>
+                </div>
+                
+                <div class="setting-group">
+                    <label for="notificationsEnabled">
+                        <input type="checkbox" id="notificationsEnabled">
+                        Enable Browser Notifications
+                    </label>
+                </div>
             </div>
             
             <div class="stats">
@@ -61,6 +77,13 @@
                 </div>
             </div>
         </main>
+        
+        <div id="notificationBanner" class="notification-banner hidden">
+            <div class="notification-content">
+                <span id="notificationMessage">Session Complete!</span>
+                <button id="closeNotification" class="close-btn">&times;</button>
+            </div>
+        </div>
     </div>
     
     <script type="module" src="src/app.js"></script>

@@ -4,7 +4,9 @@ export class SettingsService {
       workDuration: 25,
       breakDuration: 5,
       longBreakDuration: 15,
-      sessionsUntilLongBreak: 4
+      sessionsUntilLongBreak: 4,
+      soundEnabled: true,
+      notificationsEnabled: false
     };
   }
 
@@ -37,6 +39,10 @@ export class SettingsService {
     validated.breakDuration = Math.max(1, Math.min(30, parseInt(settings.breakDuration) || 5));
     validated.longBreakDuration = Math.max(1, Math.min(60, parseInt(settings.longBreakDuration) || 15));
     validated.sessionsUntilLongBreak = Math.max(2, Math.min(10, parseInt(settings.sessionsUntilLongBreak) || 4));
+    
+    // Validate boolean values
+    validated.soundEnabled = Boolean(settings.soundEnabled);
+    validated.notificationsEnabled = Boolean(settings.notificationsEnabled);
     
     return validated;
   }

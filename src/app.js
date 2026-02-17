@@ -35,6 +35,9 @@ export class PomodoroApp {
     
     // Start timer tick updates
     this.startTimerUpdates();
+    
+    // Register service worker for PWA functionality
+    this.registerServiceWorker();
   }
 
   bindEvents() {
@@ -42,6 +45,7 @@ export class PomodoroApp {
     this.ui.bindPauseButton(() => this.handlePause());
     this.ui.bindResetButton(() => this.handleReset());
     this.ui.bindSettingsChange(() => this.handleSettingsChange());
+    this.ui.bindNotificationClose(() => this.ui.hideNotificationBanner());
   }
 
   handleStart() {
@@ -74,6 +78,11 @@ export class PomodoroApp {
     const newSettings = this.ui.getSettings();
     const validatedSettings = this.settingsService.validateSettings(newSettings);
     
+    // Request notification permission if user just enabled notifications
+    if (!this.settings.notificationsEnabled && validatedSettings.notificationsEnabled) {
+      this.notificationService.requestPermission();
+    }
+    
     this.settings = validatedSettings;
     this.timer.updateSettings(validatedSettings);
     this.settingsService.saveSettings(validatedSettings);
@@ -81,10 +90,10 @@ export class PomodoroApp {
   }
 
   handleSessionComplete() {
-    // Play notification sound
-    this.notificationService.playNotificationSound();
+    // Play notification sound if enabled
+    this.notificationService.playNotificationSound(this.settings.soundEnabled);
     
-    // Show browser notification
+    // Show browser notification if enabled
     const titles = {
       'work': 'Work Session Complete!',
       'break': 'Break Time!',
@@ -100,8 +109,12 @@ export class PomodoroApp {
     const sessionType = this.timer.getSessionTypeLabel();
     this.notificationService.showNotification(
       titles[this.timer.currentSessionType],
-      messages[this.timer.currentSessionType]
+      messages[this.timer.currentSessionType],
+      this.settings.notificationsEnabled
     );
+    
+    // Show in-page notification banner
+    this.ui.showNotificationBanner(titles[this.timer.currentSessionType]);
     
     // Update stats if work session completed
     if (this.timer.currentSessionType === 'work') {
@@ -131,7 +144,7 @@ export class PomodoroApp {
     
     this.ui.updateTimerDisplay(time);
     this.ui.updateSessionType(sessionType);
-    this.ui.updatePageTitle(time, sessionType);
+    this.ui.updatePageTitle(time, sessionType, this.timer.isRunning);
     this.ui.updateStats(this.stats.completedSessions, this.stats.totalFocusTime);
   }
 
@@ -141,6 +154,19 @@ export class PomodoroApp {
 
   saveStats() {
     this.statsService.saveStats(this.stats);
+  }
+
+  registerServiceWorker() {
+    // Only register service worker on HTTPS or localhost
+    if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(registration => {
+          console.log('Service Worker registered successfully:', registration);
+        })
+        .catch(error => {
+          console.log('Service Worker registration failed:', error);
+        });
+    }
   }
 }
 

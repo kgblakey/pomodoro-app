@@ -15,9 +15,14 @@ export class UIController {
       breakDurationInput: document.getElementById('breakDuration'),
       longBreakDurationInput: document.getElementById('longBreakDuration'),
       sessionsUntilLongBreakInput: document.getElementById('sessionsUntilLongBreak'),
+      soundEnabledInput: document.getElementById('soundEnabled'),
+      notificationsEnabledInput: document.getElementById('notificationsEnabled'),
       completedSessionsDisplay: document.getElementById('completedSessions'),
       totalFocusTimeDisplay: document.getElementById('totalFocusTime'),
-      timerDisplayContainer: document.querySelector('.timer-display')
+      timerDisplayContainer: document.querySelector('.timer-display'),
+      notificationBanner: document.getElementById('notificationBanner'),
+      notificationMessage: document.getElementById('notificationMessage'),
+      closeNotificationBtn: document.getElementById('closeNotification')
     };
   }
 
@@ -37,8 +42,12 @@ export class UIController {
     }
   }
 
-  updatePageTitle(time, sessionType) {
-    document.title = `${time} - ${sessionType} - Pomodoro Timer`;
+  updatePageTitle(time, sessionType, isRunning = false) {
+    if (isRunning) {
+      document.title = `${time} — ${sessionType}`;
+    } else {
+      document.title = `${time} - ${sessionType} - Pomodoro Timer`;
+    }
   }
 
   setButtonStates(isRunning) {
@@ -59,7 +68,9 @@ export class UIController {
       workDuration: parseInt(this.elements.workDurationInput.value) || 25,
       breakDuration: parseInt(this.elements.breakDurationInput.value) || 5,
       longBreakDuration: parseInt(this.elements.longBreakDurationInput.value) || 15,
-      sessionsUntilLongBreak: parseInt(this.elements.sessionsUntilLongBreakInput.value) || 4
+      sessionsUntilLongBreak: parseInt(this.elements.sessionsUntilLongBreakInput.value) || 4,
+      soundEnabled: this.elements.soundEnabledInput.checked,
+      notificationsEnabled: this.elements.notificationsEnabledInput.checked
     };
   }
 
@@ -68,6 +79,8 @@ export class UIController {
     this.elements.breakDurationInput.value = settings.breakDuration;
     this.elements.longBreakDurationInput.value = settings.longBreakDuration;
     this.elements.sessionsUntilLongBreakInput.value = settings.sessionsUntilLongBreak;
+    this.elements.soundEnabledInput.checked = settings.soundEnabled;
+    this.elements.notificationsEnabledInput.checked = settings.notificationsEnabled;
   }
 
   bindStartButton(handler) {
@@ -87,11 +100,31 @@ export class UIController {
       this.elements.workDurationInput,
       this.elements.breakDurationInput,
       this.elements.longBreakDurationInput,
-      this.elements.sessionsUntilLongBreakInput
+      this.elements.sessionsUntilLongBreakInput,
+      this.elements.soundEnabledInput,
+      this.elements.notificationsEnabledInput
     ];
 
     inputs.forEach(input => {
       input.addEventListener('change', handler);
     });
+  }
+
+  showNotificationBanner(message) {
+    this.elements.notificationMessage.textContent = message;
+    this.elements.notificationBanner.classList.remove('hidden');
+    
+    // Auto-hide after 5 seconds
+    setTimeout(() => {
+      this.hideNotificationBanner();
+    }, 5000);
+  }
+
+  hideNotificationBanner() {
+    this.elements.notificationBanner.classList.add('hidden');
+  }
+
+  bindNotificationClose(handler) {
+    this.elements.closeNotificationBtn.addEventListener('click', handler);
   }
 }
